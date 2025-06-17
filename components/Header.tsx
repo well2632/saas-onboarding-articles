@@ -24,12 +24,12 @@ const Header = () => {
            
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-              Contact Sales
-            </button>
-            <button className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600">
-              Get a Free Demo
-            </button>
+            <a href="https://wa.me/5511945169179?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20o%20suporte." target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              Falar com suporte
+            </a>
+            <a href="https://app.hashiko.com.br/" target="_blank" rel="noopener noreferrer" className="px-4 py-2 text-sm font-medium text-white bg-[#FF6B35] rounded-md hover:opacity-80">
+              Ir para sistema
+            </a>
           </div>
           <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)}>
@@ -41,16 +41,14 @@ const Header = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pt-2 pb-4 space-y-2">
-          <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Products</a>
-          <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Pricing</a>
-          <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Resources</a>
+          
           <div className="border-t border-gray-200 pt-4 space-y-2">
-             <button className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-              Contact Sales
-            </button>
-            <button className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white bg-red-500 hover:bg-red-600">
-              Get a Free Demo
-            </button>
+             <a href="https://wa.me/5511945169179?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20o%20suporte." target="_blank" rel="noopener noreferrer" className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+              Falar com suporte
+            </a>
+            <a href="https://app.hashiko.com.br/" target="_blank" rel="noopener noreferrer" className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white bg-[#FF6B35] hover:bg-[#FF6B35]/80">
+              Ir para sistema
+            </a>
           </div>
         </div>
       )}

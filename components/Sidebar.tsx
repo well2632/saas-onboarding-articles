@@ -1,93 +1,48 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import SearchBar from './SearchBar';
 
-type Article = {
-  id: number;
-  title: string;
-  category: string;
-};
-
-type GroupedArticles = {
-  [key: string]: Article[];
-};
-
-const Sidebar = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [groupedArticles, setGroupedArticles] = useState<GroupedArticles>({});
+export default function Sidebar() {
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    const getArticles = async () => {
+    const fetchCategories = async () => {
       const { data, error } = await supabase
         .from('articles')
-        .select('id, title, category')
-        .order('title', { ascending: true });
+        .select('category');
 
       if (error) {
-        console.error('Error fetching articles for sidebar:', error);
-        setArticles([]);
-      } else {
-        setArticles(data || []);
+        console.error('Error fetching categories:', error);
+        return;
       }
+
+      const uniqueCategories = Array.from(new Set(data.map(item => item.category).filter(Boolean)));
+      setCategories(uniqueCategories);
     };
 
-    getArticles();
+    fetchCategories();
   }, []);
 
-  useEffect(() => {
-    const filtered = articles.filter((article) =>
-      article.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    const grouped = filtered.reduce((acc, article) => {
-      const { category } = article;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(article);
-      return acc;
-    }, {} as GroupedArticles);
-
-    setGroupedArticles(grouped);
-  }, [searchTerm, articles]);
-
   return (
-    <aside className="w-full md:w-72 bg-white border-r border-gray-200 p-6 flex-shrink-0 hidden md:block">
-      <div className="mb-6">
-        <SearchBar
-          placeholder="Procurar postagem"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      <nav className="space-y-6">
-        {Object.keys(groupedArticles).length > 0 ? (
-          Object.entries(groupedArticles).map(([category, articlesInCategory]) => (
-            <div key={category}>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                {category}
-              </h3>
-              <ul className="space-y-2">
-                {articlesInCategory.map((article) => (
-                  <li key={article.id}>
-                    <Link href={`/artigo/${article.id}`} className="text-gray-600 hover:text-gray-900 hover:bg-gray-100 block p-2 rounded-md text-sm">
-                      {article.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+    <aside className="hidden md:block w-64 h-screen-minus-header p-4 border-r border-gray-200">
+      <h2 className="text font-semibold text-gray-800 mb-4 px-3">Categorias</h2>
+      <nav className="space-y-1">
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <Link 
+              key={category}
+              href={`/categoria/${category.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/ /g, '-')}`}
+              className="block px-3 py-2 text font-medium text-gray-700 rounded-md hover:bg-gray-100"
+            >
+              {category}
+            </Link>
           ))
         ) : (
-          <p className="text-sm text-gray-500">Nenhum artigo encontrado.</p>
+          <p className="text text-gray-500">Carregando categorias...</p>
         )}
       </nav>
     </aside>
   );
-};
-
-export default Sidebar;
+}

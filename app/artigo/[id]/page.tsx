@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 type Article = {
   id: number;
@@ -7,6 +8,7 @@ type Article = {
   content: string;
   created_at: string;
   category: string;
+  video_url?: string; // Campo de vídeo opcional
 };
 
 async function getArticle(id: string): Promise<Article | null> {
@@ -38,18 +40,37 @@ export default async function ArticlePage({ params: { id } }: { params: { id: st
     <div className="w-full max-w-4xl mx-auto">
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-4">
-        <span>Home</span>
+        <Link href="/" className="hover:underline">Home</Link>
         <span className="mx-2">›</span>
-        <span className="capitalize">{article.category.toLowerCase()}</span>
+        <Link 
+              key={article.category}
+              href={`/categoria/${article.category.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/ /g, '-')}`}
+              className="hover:underline"
+            >
+              {article.category}
+            </Link>
         <span className="mx-2">›</span>
         <span className="font-semibold text-gray-700">{article.title}</span>
       </div>
 
       <article className="bg-white p-8 rounded-lg border border-gray-200">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          Última atualização {new Date(article.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
+
+        {article.video_url && (
+          <div className="my-6">
+            <div className="aspect-video w-full">
+              <iframe
+                src={article.video_url}
+                title="Video Player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full rounded-lg"
+              ></iframe>
+            </div>
+          </div>
+        )}
+
         <div className="prose prose-lg max-w-none text-gray-800">
           {article.content}
         </div>

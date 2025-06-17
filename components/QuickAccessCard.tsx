@@ -1,22 +1,28 @@
+import Link from 'next/link';
+import React from 'react';
+
 interface QuickAccessCardProps {
-  icon: React.ElementType;
+  id: number;
   title: string;
-  href: string;
+  Icon: React.ElementType;
 }
 
-const QuickAccessCard = ({ icon: Icon, title, href }: QuickAccessCardProps) => {
+export default function QuickAccessCard({ id, title, Icon }: QuickAccessCardProps) {
+  const href = `/artigo/${id}`;
+
   return (
-    <a href={href} className="block group">
-      <div className="bg-white p-4 rounded-lg border border-gray-200 transition-all duration-300 hover:border-blue-500 hover:shadow-md">
-        <div className="aspect-video bg-gray-50 rounded-md flex items-center justify-center mb-4">
-          <Icon className="w-12 h-12 text-red-500 opacity-80" />
+    <Link href={href} className="block group h-full">
+      <div className="flex items-center space-x-4 p-4 bg-white border border-gray-200 rounded-lg  hover:border-[#FF6B35] transition-all duration-200 h-full">
+        <div className="flex-shrink-0">
+          {/* Renderiza o ícone apenas se ele for um componente válido */}
+          {Icon && <Icon className="w-6 h-6 text-[#FF6B35]" />}
         </div>
-        <h3 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-          {title}
-        </h3>
+        <div className="flex-1">
+          <h3 className="font-semibold text-gray-800 group-hover:text-[#FF6B35] transition-colors">
+            {title}
+          </h3>
+        </div>
       </div>
-    </a>
+    </Link>
   );
 };
-
-export default QuickAccessCard;

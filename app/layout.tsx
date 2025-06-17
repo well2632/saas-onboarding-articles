@@ -9,8 +9,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Help Center - Tbung',
-  description: 'Como podemos te ajudar?',
+  title: 'Hashiko | Ajuda e Respostas',
+  description: 'Encontre ajuda e respostas para suas perguntas.',
 };
 
 export default function RootLayout({
@@ -30,7 +30,6 @@ export default function RootLayout({
             </main>
           </div>
         </div>
-        <ChatBubble />
       </body>
     </html>
   );
