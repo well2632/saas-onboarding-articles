@@ -23,12 +23,12 @@ async function getArticle(id: string): Promise<Article | null> {
   return data;
 }
 
-export default async function ArticlePage({ params }: { params: { id: string } }) {
+export default async function ArticlePage({ params: { id } }: { params: { id: string } }) {
   // Incrementa o contador de visualização de forma segura via RPC
   // Usamos `then()` em vez de `await` para não bloquear a renderização da página
-  supabase.rpc('increment_view_count', { article_id_to_update: params.id }).then();
+  supabase.rpc('increment_view_count', { article_id_to_update: id }).then();
 
-  const article = await getArticle(params.id);
+  const article = await getArticle(id);
 
   if (!article) {
     return null; // Handled by notFound() in getArticle
