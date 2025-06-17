@@ -65,7 +65,7 @@ export default function CategoryPageContent({ initialArticles, category }: { ini
         <div className="text-center py-16 bg-white border border-dashed rounded-lg">
           <h2 className="text-2xl font-semibold text-gray-700">Nenhum artigo encontrado</h2>
           <p className="text-gray-500 mt-2">
-            Sua busca por "{searchTerm}" não encontrou resultados.
+            Sua busca por &quot;{searchTerm}&quot; não encontrou resultados.
           </p>
         </div>
       )}

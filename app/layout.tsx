@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import ChatBubble from '@/components/ChatBubble';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import Link from "next/link";
 import "./globals.css";
 import NextTopLoader from 'nextjs-toploader';
 

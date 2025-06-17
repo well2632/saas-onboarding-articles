@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
+
 import QuickAccessCard from './QuickAccessCard';
 import * as Icons from 'lucide-react'; // Import all icons
 import { supabase } from '@/lib/supabase';
@@ -96,7 +96,7 @@ export default function HomePageContent({ categories }: HomePageContentProps) {
               ))}
             </div>
           ) : (
-            <p className="text-center text-gray-500 italic">Nenhum artigo encontrado para "{mainSearch}".</p>
+            <p className="text-center text-gray-500 italic">Nenhum artigo encontrado para &quot;{mainSearch}&quot;.</p>
           )}
         </div>
       ) : (

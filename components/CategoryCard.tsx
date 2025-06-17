@@ -4,6 +4,7 @@ import Link from 'next/link';
 import * as Icons from 'lucide-react';
 
 // Mapeia dinamicamente todos os ícones da biblioteca 'lucide-react'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMap: { [key: string]: React.ElementType } = Icons as any;
 
 interface CategoryCardProps {
