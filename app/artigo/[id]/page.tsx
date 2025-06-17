@@ -32,6 +32,7 @@ interface ArticlePageProps {
   params: {
     id: string;
   };
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
