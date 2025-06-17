@@ -35,11 +35,11 @@ async function getHomePageCategories(): Promise<Category[]> {
 
 
 export default async function Home() {
-  const [homePageCategories = await Promise.all([
+  const [homePageCategories] = await Promise.all([
     getHomePageCategories(),
   ]);
 
-  
+
 
   return <HomePageContent categories={homePageCategories}  />;
 }
