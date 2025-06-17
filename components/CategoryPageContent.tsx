@@ -57,7 +57,7 @@ export default function CategoryPageContent({ initialArticles, category }: { ini
               key={article.id}
               id={article.id}
               title={article.title}
-              description={article.description}
+              description={article.description ?? ''}
               Icon={iconMap[article.icon_name || ''] || Icons.FileQuestion}
             />
           ))}

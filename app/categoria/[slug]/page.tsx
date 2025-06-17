@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 export type Article = {
   id: number;
   title: string;
+  description: string | null; // Adicionando a descrição
   icon_name: string | null;
 };
 
