@@ -33,9 +33,8 @@ interface ArticlePageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default async function ArticlePage({ params: paramsPromise }: ArticlePageProps) {
-  const params = await paramsPromise;
-  const { id } = params;
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { id } = await params;
   // Incrementa o contador de visualização de forma segura via RPC
   // Usamos `then()` em vez de `await` para não bloquear a renderização da página
   supabase.rpc('increment_view_count', { article_id_to_update: id }).then();
