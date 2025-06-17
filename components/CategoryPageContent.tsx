@@ -10,7 +10,8 @@ import * as Icons from 'lucide-react';
 import { type Article, type Category } from '@/app/categoria/[slug]/page'; // Importa as tipagens
 
 // Mapeia nomes de ícones (string) para componentes React
-const iconMap: { [key: string]: React.ElementType } = Icons;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const iconMap: { [key: string]: React.ElementType } = Icons as any;
 
 export default function CategoryPageContent({ initialArticles, category }: { initialArticles: Article[], category: Category }) {
   const [articles, setArticles] = useState(initialArticles);
