@@ -29,13 +29,12 @@ async function getArticle(id: string): Promise<Article | null> {
 }
 
 interface ArticlePageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string; }>;
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
+export default async function ArticlePage({ params: paramsPromise }: ArticlePageProps) {
+  const params = await paramsPromise;
   const { id } = params;
   // Incrementa o contador de visualização de forma segura via RPC
   // Usamos `then()` em vez de `await` para não bloquear a renderização da página
