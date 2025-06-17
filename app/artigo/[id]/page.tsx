@@ -30,7 +30,7 @@ async function getArticle(id: string): Promise<Article | null> {
 
 interface ArticlePageProps {
   params: Promise<{ id: string; }>;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
