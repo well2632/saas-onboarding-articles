@@ -7,14 +7,17 @@ type Article = {
   title: string;
   content: string;
   created_at: string;
-  category: string;
   video_url?: string; // Campo de vídeo opcional
+  categories: { // O Supabase retorna o nome da tabela relacionada
+    title: string;
+    slug: string;
+  } | null;
 };
 
 async function getArticle(id: string): Promise<Article | null> {
   const { data, error } = await supabase
     .from('articles')
-    .select('*')
+    .select('*, categories(title, slug)') // Puxa dados da tabela relacionada 'categories'
     .eq('id', id)
     .single();
 
@@ -25,7 +28,9 @@ async function getArticle(id: string): Promise<Article | null> {
   return data;
 }
 
-export default async function ArticlePage({ params: { id } }: { params: { id: string } }) {
+export default async function ArticlePage({ params: rawParams }: { params: { id: string } }) {
+  const params = await rawParams; // Await params
+  const { id } = params;
   // Incrementa o contador de visualização de forma segura via RPC
   // Usamos `then()` em vez de `await` para não bloquear a renderização da página
   supabase.rpc('increment_view_count', { article_id_to_update: id }).then();
@@ -41,14 +46,18 @@ export default async function ArticlePage({ params: { id } }: { params: { id: st
       {/* Breadcrumb */}
       <div className="text-sm text-gray-500 mb-4">
         <Link href="/" className="hover:underline">Home</Link>
-        <span className="mx-2">›</span>
-        <Link 
-              key={article.category}
-              href={`/categoria/${article.category.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/ /g, '-')}`}
+        {article.categories && (
+          <>
+            <span className="mx-2">›</span>
+            <Link 
+              key={article.categories.slug}
+              href={`/categoria/${article.categories.slug}`}
               className="hover:underline"
             >
-              {article.category}
+              {article.categories.title}
             </Link>
+          </>
+        )}
         <span className="mx-2">›</span>
         <span className="font-semibold text-gray-700">{article.title}</span>
       </div>

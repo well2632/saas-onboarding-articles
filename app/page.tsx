@@ -1,66 +1,45 @@
 import { supabase } from '@/lib/supabase';
 import HomePageContent from '@/components/HomePageContent';
 
-// Tipagem para o artigo, garantindo consistência
-type Article = {
+// Tipagem para a categoria, que será usada em múltiplos locais
+export type Category = {
   id: number;
   title: string;
-  category: string;
-  icon_name: string;
+  slug: string;
+  description: string | null;
+  icon_name: string | null;
 };
 
-// Tipagem para os artigos agrupados por categoria
-type GroupedArticles = {
-  [key: string]: Article[];
+// Tipagem para os artigos de acesso rápido
+export type QuickAccessArticle = {
+  id: number;
+  title: string;
+  description: string | null;
+  icon_name: string | null;
 };
 
-async function getCategorizedArticles(): Promise<GroupedArticles> {
+// Busca as categorias que devem ser exibidas na página inicial
+async function getHomePageCategories(): Promise<Category[]> {
   const { data, error } = await supabase
-    .from('articles')
-    .select('id, title, category, icon_name')
-    .order('category', { ascending: true })
-    .order('title', { ascending: true });
+    .from('categories')
+    .select('id, title, slug, description, icon_name')
+    .order('home_order', { ascending: true });
 
   if (error) {
-    console.error('Error fetching articles:', error.message);
-    return {};
-  }
-
-  if (!data) {
-    return {};
-  }
-
-  // Agrupa os artigos por categoria
-  const grouped = data.reduce((acc, article) => {
-    const { category } = article;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(article);
-    return acc;
-  }, {} as GroupedArticles);
-
-  return grouped;
-}
-
-async function getQuickAccessArticles() {
-  const { data, error } = await supabase
-    .from('articles')
-    .select('id, title, category, icon_name') // Adiciona icon_name
-    .eq('is_quick_access', true)
-    .limit(6);
-
-  if (error) {
-    console.error('Error fetching quick access articles:', error.message);
-    // Retorna um array vazio em caso de erro para não quebrar a página.
+    console.error('Error fetching home page categories:', error.message);
     return [];
   }
+
   return data || [];
 }
 
-export default async function Home() {
-  const quickAccessArticles = await getQuickAccessArticles();
-  const categorizedArticles = await getCategorizedArticles();
 
-  return <HomePageContent articles={quickAccessArticles} categorizedArticles={categorizedArticles} />;
+export default async function Home() {
+  const [homePageCategories = await Promise.all([
+    getHomePageCategories(),
+  ]);
+
+  
+
+  return <HomePageContent categories={homePageCategories}  />;
 }

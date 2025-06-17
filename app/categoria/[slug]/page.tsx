@@ -1,56 +1,57 @@
 import { supabase } from '@/lib/supabase';
 import CategoryPageContent from '@/components/CategoryPageContent';
+import { notFound } from 'next/navigation';
 
-// Tipagem para os artigos, pode ser movida para um arquivo compartilhado no futuro
-type Article = {
+// Tipagens para os dados
+export type Article = {
   id: number;
   title: string;
-  content: string;
-  icon_name: string;
+  icon_name: string | null;
 };
 
-// Função de Servidor que busca os dados no Supabase
-async function getCategoryData(categorySlug: string): Promise<{ articles: Article[], categoryName: string | null }> {
-  // 1. Buscar todas as categorias únicas
-  const { data: categoriesData, error: categoriesError } = await supabase
-    .from('articles')
-    .select('category');
+export type Category = {
+  id: number;
+  title: string;
+  description: string | null;
+};
 
-  if (categoriesError) {
-    console.error('Error fetching categories:', categoriesError);
-    return { articles: [], categoryName: null };
+// Busca os dados da categoria e seus artigos
+// Busca os dados da categoria e seus artigos
+async function getCategoryData(slug: string): Promise<{ articles: Article[], category: Category }> {
+  // 1. Encontra a categoria pelo slug
+  const { data: category, error: categoryError } = await supabase
+    .from('categories')
+    .select('id, title, description')
+    .eq('slug', slug)
+    .single();
+
+  // Se a categoria não for encontrada, retorna 404
+  if (categoryError || !category) {
+    notFound();
   }
 
-  const uniqueCategories = Array.from(new Set(categoriesData.map(item => item.category).filter(Boolean)));
-
-  // 2. Encontrar a categoria original que corresponde ao slug
-  const originalCategory = uniqueCategories.find(cat => 
-    cat.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/ /g, '-') === categorySlug
-  );
-
-  if (!originalCategory) {
-    return { articles: [], categoryName: categorySlug.replace(/-/g, ' ') };
-  }
-
-  // 3. Buscar artigos usando o nome da categoria original
-  const { data, error } = await supabase
+  // 2. Busca os artigos usando o ID da categoria encontrada
+  const { data: articles, error: articlesError } = await supabase
     .from('articles')
-    .select('id, title, content, icon_name')
-    .eq('category', originalCategory)
+    .select('id, title, description, icon_name')
+    .eq('category_id', category.id)
     .order('title', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching articles by category:', error);
-    return { articles: [], categoryName: originalCategory };
+  if (articlesError) {
+    console.error('Error fetching articles for category:', articlesError);
+    // Retorna a categoria mas com artigos vazios em caso de erro
+    return { articles: [], category };
   }
-  
-  return { articles: data || [], categoryName: originalCategory };
+
+  return { articles: articles || [], category };
 }
 
 // Componente de Página (Server Component)
-export default async function CategoryPage({ params: { slug } }: { params: { slug: string } }) {
-  const { articles, categoryName } = await getCategoryData(slug);
+export default async function CategoryPage({ params: rawParams }: { params: { slug: string } }) {
+  const params = await rawParams; // Await params
+  const { slug } = params;
+  const { articles, category } = await getCategoryData(slug);
 
-  // Passa os dados buscados para o componente de cliente
-  return <CategoryPageContent initialArticles={articles} categoryName={categoryName || slug.replace(/-/g, ' ')} />;
+  // Passa os dados para o componente de cliente
+  return <CategoryPageContent initialArticles={articles} category={category} />;
 }

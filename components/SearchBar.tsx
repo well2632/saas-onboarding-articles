@@ -19,7 +19,7 @@ const SearchBar = ({ placeholder = 'Search help', value, onChange }: SearchBarPr
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="block w-full pl-10 pr-12 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+        className="block w-full pl-10 pr-12 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#FF6B35] focus:border-[#FF6B35] sm:text-sm"
       />
      
     </div>
