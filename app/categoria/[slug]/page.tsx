@@ -46,10 +46,14 @@ async function getCategoryData(slug: string): Promise<{ articles: Article[], cat
   return { articles: articles || [], category };
 }
 
+interface CategoryPageProps {
+  params: Promise<{ slug: string; }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
 // Componente de Página (Server Component)
-export default async function CategoryPage({ params: rawParams }: { params: { slug: string } }) {
-  const params = await rawParams; // Await params
-  const { slug } = params;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
   const { articles, category } = await getCategoryData(slug);
 
   // Passa os dados para o componente de cliente
