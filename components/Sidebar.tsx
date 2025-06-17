@@ -59,7 +59,7 @@ const Sidebar = () => {
     <aside className="w-full md:w-72 bg-white border-r border-gray-200 p-6 flex-shrink-0 hidden md:block">
       <div className="mb-6">
         <SearchBar
-          placeholder="Search help..."
+          placeholder="Procurar postagem"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -83,7 +83,7 @@ const Sidebar = () => {
             </div>
           ))
         ) : (
-          <p className="text-sm text-gray-500">No articles found.</p>
+          <p className="text-sm text-gray-500">Nenhum artigo encontrado.</p>
         )}
       </nav>
     </aside>

@@ -1,7 +1,5 @@
-import { LucideIcon } from 'lucide-react';
-
 interface QuickAccessCardProps {
-  icon: LucideIcon;
+  icon: React.ElementType;
   title: string;
   href: string;
 }

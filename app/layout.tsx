@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Help Center - Tbung',
-  description: 'How can we help?',
+  description: 'Como podemos te ajudar?',
 };
 
 export default function RootLayout({

@@ -24,6 +24,10 @@ async function getArticle(id: string): Promise<Article | null> {
 }
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
+  // Incrementa o contador de visualização de forma segura via RPC
+  // Usamos `then()` em vez de `await` para não bloquear a renderização da página
+  supabase.rpc('increment_view_count', { article_id_to_update: params.id }).then();
+
   const article = await getArticle(params.id);
 
   if (!article) {
@@ -44,7 +48,7 @@ export default async function ArticlePage({ params }: { params: { id: string } }
       <article className="bg-white p-8 rounded-lg border border-gray-200">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
         <p className="text-sm text-gray-500 mb-8">
-          Last updated on {new Date(article.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          Última atualização {new Date(article.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
         <div className="prose prose-lg max-w-none text-gray-800">
           {article.content}
