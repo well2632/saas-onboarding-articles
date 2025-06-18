@@ -1,6 +1,9 @@
 'use client';
 
+'use client';
+
 import React, { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import type { IconName } from '@/lib/icon-types';
 import { availableLucideIcons } from '@/lib/icon-types';
 import IconPickerModal from './IconPickerModal';
@@ -99,6 +102,7 @@ interface ArticleManagerProps {
 }
 
 export default function ArticleManager({ articles, categories }: ArticleManagerProps) {
+  const router = useRouter();
   const [editingArticle, setEditingArticle] = useState<Article | null>(null);
 
   const handleFormSubmit = async (articleData: ArticleFormData) => {
@@ -111,6 +115,7 @@ export default function ArticleManager({ articles, categories }: ArticleManagerP
     alert(result.message);
     if (result.success) {
       setEditingArticle(null);
+      router.refresh();
     }
   };
 
@@ -118,6 +123,9 @@ export default function ArticleManager({ articles, categories }: ArticleManagerP
     if (window.confirm(`Tem certeza que deseja excluir o artigo "${article.title}"?`)) {
       const result = await deleteArticleAction(article.id, article.category_id);
       alert(result.message);
+      if (result.success) {
+        router.refresh();
+      }
     }
   };
 

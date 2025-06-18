@@ -13,7 +13,8 @@ export async function createCategoryAction(categoryData: Omit<Category, 'id'>) {
     return { success: false, message: error.message };
   }
 
-  revalidatePath('/'); // Revalidate home page
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
 
   return { success: true, message: 'Categoria criada com sucesso!' };
 }
@@ -30,7 +31,8 @@ export async function updateCategoryAction(categoryId: number, categoryData: Omi
     return { success: false, message: error.message };
   }
 
-  revalidatePath('/'); // Revalidate home page
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
   // Also revalidate the specific category page if it exists
   revalidatePath(`/categoria/${categoryData.slug}`);
 
@@ -46,7 +48,8 @@ export async function deleteCategoryAction(id: number, slug: string) {
     return { success: false, message: error.message };
   }
 
-  revalidatePath('/'); // Revalidate home page
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
   revalidatePath(`/categoria/${slug}`); // Revalidate the category page
 
   return { success: true, message: 'Categoria excluída com sucesso!' };
@@ -64,7 +67,8 @@ export async function createArticleAction(articleData: Omit<Article, 'id' | 'cre
   }
 
   // Revalidate relevant paths
-  revalidatePath('/');
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
   if (data?.category_id) {
     const { data: category } = await supabase.from('categories').select('slug').eq('id', data.category_id).single();
     if (category) {
@@ -88,7 +92,8 @@ export async function updateArticleAction(articleId: number, articleData: Omit<A
   }
 
   // Revalidate relevant paths
-  revalidatePath('/');
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
   revalidatePath(`/artigo/${articleId}`);
   if (articleData.category_id) {
      const { data: category } = await supabase.from('categories').select('slug').eq('id', articleData.category_id).single();
@@ -112,7 +117,8 @@ export async function deleteArticleAction(articleId: number, categoryId: number)
   }
 
   // Revalidate relevant paths
-  revalidatePath('/');
+  revalidatePath('/', 'layout'); // Revalidate root layout
+  revalidatePath('/admin'); // Revalidate the admin page itself
   revalidatePath(`/artigo/${articleId}`);
   if (category) {
     revalidatePath(`/categoria/${category.slug}`);

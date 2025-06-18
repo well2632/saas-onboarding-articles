@@ -1,6 +1,9 @@
 'use client';
 
+'use client';
+
 import React, { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import IconPickerModal from './IconPickerModal';
 import { availableLucideIcons, type IconName } from '@/lib/icon-types';
 import { createCategoryAction, updateCategoryAction, deleteCategoryAction } from '@/app/admin/actions';
@@ -110,6 +113,7 @@ function CategoryForm({ onSubmit, initialData, buttonText }: CategoryFormProps) 
 }
 
 export default function CategoryManager({ categories }: { categories: Category[] }) {
+  const router = useRouter();
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const handleFormSubmit = async (categoryData: Omit<Category, 'id'>) => {
@@ -124,6 +128,7 @@ export default function CategoryManager({ categories }: { categories: Category[]
 
     if (result.success) {
       setEditingCategory(null); // Resets the form to "Create" mode
+      router.refresh();
     }
   };
 
@@ -131,6 +136,9 @@ export default function CategoryManager({ categories }: { categories: Category[]
     if (window.confirm(`Tem certeza que deseja excluir a categoria "${category.title}"? Esta ação não pode ser desfeita.`)) {
       const result = await deleteCategoryAction(category.id, category.slug);
       alert(result.message);
+      if (result.success) {
+        router.refresh();
+      }
       // No need to manually refetch, revalidatePath in the action handles it.
     }
   };
