@@ -8,7 +8,7 @@ import NextTopLoader from 'nextjs-toploader';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Hashiko | Ajuda e Respostas',
+  title: 'Guias Hashiko',
   description: 'Encontre ajuda e respostas para suas perguntas.',
 };
 
