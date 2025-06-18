@@ -10,9 +10,26 @@ export type Category = {
   slug: string;
   description: string | null;
   icon_name: IconName | null;
+  home_order: number | null;
 };
 
 // Tipagem para os artigos de acesso rápido
+// Tipagem completa para um Artigo
+export type Article = {
+  id: number;
+  title: string;
+  content: string;
+  category_id: number;
+  description: string | null;
+  icon_name: IconName | null;
+  video_url?: string | null; 
+  created_at: string;
+  // Opcional, para join com a tabela de categorias
+  categories?: {
+    title: string;
+  };
+};
+
 export type QuickAccessArticle = {
   id: number;
   title: string;
@@ -24,7 +41,7 @@ export type QuickAccessArticle = {
 async function getHomePageCategories(): Promise<Category[]> {
   const { data, error } = await supabase
     .from('categories')
-    .select('id, title, slug, description, icon_name')
+    .select('id, title, slug, description, icon_name, home_order')
     .order('home_order', { ascending: true });
 
   if (error) {
