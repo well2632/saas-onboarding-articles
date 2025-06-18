@@ -13,8 +13,7 @@ interface IconPickerModalProps {
 const IconPickerModal: React.FC<IconPickerModalProps> = ({ isOpen, onClose, onIconSelect }) => {
   if (!isOpen) return null;
 
-  // Mapeamento para renderizar ícones. Precisamos do 'as any' por causa da natureza dinâmica.
-  const iconComponents = Icons as any;
+  // O objeto 'Icons' importado de 'lucide-react' será usado diretamente para buscar os componentes.
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
@@ -31,7 +30,7 @@ const IconPickerModal: React.FC<IconPickerModalProps> = ({ isOpen, onClose, onIc
         </div>
         <div className="overflow-y-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 p-1">
           {availableLucideIcons.map((iconName) => {
-            const IconComponent = iconComponents[iconName];
+            const SpecificIconComponent = Icons[iconName]; // TypeScript infere o tipo específico aqui
             return (
               <div 
                 key={iconName} 
@@ -40,10 +39,10 @@ const IconPickerModal: React.FC<IconPickerModalProps> = ({ isOpen, onClose, onIc
                 onClick={() => onIconSelect && onIconSelect(iconName)}
                 title={iconName}
               >
-                {IconComponent ? (
-                  <IconComponent size={32} className="mb-1 text-gray-700" />
+                {SpecificIconComponent ? (
+                  <SpecificIconComponent size={32} className="mb-1 text-gray-700" />
                 ) : (
-                  <Icons.HelpCircle size={32} className="mb-1 text-red-500" /> // Fallback se o ícone não for encontrado
+                  <Icons.HelpCircle size={32} className="mb-1 text-red-500" />
                 )}
                 <span className="text-xs text-center text-gray-600 truncate w-full">{iconName}</span>
               </div>
