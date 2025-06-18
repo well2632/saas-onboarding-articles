@@ -7,15 +7,27 @@ import * as Icons from 'lucide-react';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMap: { [key: string]: React.ElementType } = Icons as any;
 
+import type { IconName } from '@/lib/icon-types';
+
 interface CategoryCardProps {
   title: string;
   description: string | null;
   slug: string;
-  iconName: string | null;
+  iconName: IconName | null; // Using IconName type
 }
 
 export default function CategoryCard({ title, description, slug, iconName }: CategoryCardProps) {
-  const Icon = iconName ? iconMap[iconName] : Icons.FileText;
+  const IconComponent = (iconName && iconMap[iconName]) ? iconMap[iconName] : Icons.FileText;
+  const Icon = IconComponent || Icons.HelpCircle; // Fallback final se FileText também falhar
+
+  console.log(`CategoryCard Debug: slug='${slug}', iconName='${iconName}'`);
+  console.log(`  - iconMap[iconName] resolved to:`, iconName ? iconMap[iconName] : 'N/A (iconName is null/empty)');
+  console.log(`  - IconComponent resolved to:`, IconComponent ? (typeof IconComponent === 'string' ? IconComponent : 'ComponentObject') : IconComponent);
+  console.log(`  - Final Icon resolved to:`, Icon ? (typeof Icon === 'string' ? Icon : 'ComponentObject') : Icon);
+
+  if (!Icon) {
+    console.error(`CRITICAL: Icon is undefined for category slug '${slug}' with iconName '${iconName}'. Fallbacks (FileText, HelpCircle) might also be undefined.`);
+  }
 
   return (
     <Link href={`/categoria/${slug}`}>

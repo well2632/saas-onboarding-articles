@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react'; // Adicionado React para Fragment
+import IconPickerModal from './IconPickerModal'; // Importando o modal
+import type { IconName } from '@/lib/icon-types';
+import { availableLucideIcons } from '@/lib/icon-types';
 import { supabase } from '@/lib/supabase';
 
 // Tipagem para a categoria, espelhando o banco de dados
@@ -25,8 +28,15 @@ function CategoryForm({ onSubmit, initialData, buttonText }: CategoryFormProps) 
   const [title, setTitle] = useState(initialData?.title || '');
   const [slug, setSlug] = useState(initialData?.slug || '');
   const [description, setDescription] = useState(initialData?.description || '');
-  const [iconName, setIconName] = useState(initialData?.icon_name || '');
+  const [iconName, setIconName] = useState<IconName | ''>(() => {
+    const initialIcon = initialData?.icon_name;
+    if (initialIcon && availableLucideIcons.includes(initialIcon as IconName)) {
+      return initialIcon as IconName;
+    }
+    return '';
+  });
   const [homeOrder, setHomeOrder] = useState(initialData?.home_order != null ? initialData.home_order.toString() : '');
+  const [isIconModalOpen, setIsIconModalOpen] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -48,7 +58,8 @@ function CategoryForm({ onSubmit, initialData, buttonText }: CategoryFormProps) 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg bg-gray-50">
+    <>
+      <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg bg-gray-50">
       <input
         type="text"
         placeholder="Título da Categoria"
@@ -71,13 +82,18 @@ function CategoryForm({ onSubmit, initialData, buttonText }: CategoryFormProps) 
         onChange={(e) => setDescription(e.target.value)}
         className="w-full p-2 border rounded"
       />
-      <input
-        type="text"
-        placeholder="Nome do Ícone (ex: file-text)"
-        value={iconName || ''}
-        onChange={(e) => setIconName(e.target.value)}
-        className="w-full p-2 border rounded"
-      />
+       <div className="my-0">
+        <button type="button" onClick={() => setIsIconModalOpen(true)} className="text-sm text-blue-600 hover:underline">
+          Ver lista visualmente
+        </button>
+      </div>
+      <select value={iconName} onChange={(e) => setIconName(e.target.value as IconName | '')} className="w-full p-2 border rounded bg-white">
+        <option value="">Selecione um ícone (opcional)</option>
+        {availableLucideIcons.map(name => (
+          <option key={name} value={name}>{name}</option>
+        ))}
+      </select>
+     
       <input
         type="number"
         placeholder="Ordem na Home (ex: 1)"
@@ -89,6 +105,15 @@ function CategoryForm({ onSubmit, initialData, buttonText }: CategoryFormProps) 
         {buttonText}
       </button>
     </form>
+    <IconPickerModal 
+        isOpen={isIconModalOpen} 
+        onClose={() => setIsIconModalOpen(false)} 
+        onIconSelect={(selectedIcon) => {
+            setIconName(selectedIcon);
+            setIsIconModalOpen(false);
+        }}
+    />
+  </>
   );
 }
 

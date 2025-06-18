@@ -9,12 +9,14 @@ import SearchBar from './SearchBar';
 import CategoryCard from './CategoryCard';
 import { type Category } from '@/app/page';
 
+import type { IconName } from '@/lib/icon-types';
+
 // Define o tipo para um artigo, similar ao que temos no Sidebar
 interface Article {
   id: number;
   title: string;
   description: string; // QuickAccessCard espera uma descrição
-  icon_name: string | null; // Para determinar o ícone
+  icon_name: IconName | null; // Para determinar o ícone
 }
 
 interface HomePageContentProps {

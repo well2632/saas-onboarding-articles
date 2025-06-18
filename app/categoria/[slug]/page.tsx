@@ -2,12 +2,14 @@ import { supabase } from '@/lib/supabase';
 import CategoryPageContent from '@/components/CategoryPageContent';
 import { notFound } from 'next/navigation';
 
+import type { IconName } from '@/lib/icon-types';
+
 // Tipagens para os dados
 export type Article = {
   id: number;
   title: string;
-  description: string | null; // Adicionando a descrição
-  icon_name: string | null;
+  description: string | null;
+  icon_name: IconName | null; // Using IconName type
 };
 
 export type Category = {

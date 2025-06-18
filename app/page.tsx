@@ -1,13 +1,15 @@
 import { supabase } from '@/lib/supabase';
 import HomePageContent from '@/components/HomePageContent';
 
+import type { IconName } from '@/lib/icon-types';
+
 // Tipagem para a categoria, que será usada em múltiplos locais
 export type Category = {
   id: number;
   title: string;
   slug: string;
   description: string | null;
-  icon_name: string | null;
+  icon_name: IconName | null;
 };
 
 // Tipagem para os artigos de acesso rápido
@@ -15,7 +17,7 @@ export type QuickAccessArticle = {
   id: number;
   title: string;
   description: string | null;
-  icon_name: string | null;
+  icon_name: IconName | null;
 };
 
 // Busca as categorias que devem ser exibidas na página inicial
